@@ -6,6 +6,8 @@ import java.awt.Desktop;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,17 +37,18 @@ public class Ventana_201325557 extends JFrame{
 				try{
 					File pagina;
 					{
-					pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");}
+					pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.fct");}
 					
 					
-					FileOutputStream os=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+					FileOutputStream os=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.fct");
+					DataOutputStream ds=new DataOutputStream(os);
 					elemento=JOptionPane.showInputDialog(null,"ingresa la venta a realizar de la forma:\n "
 							+ "producto-fecha-cantidad-empleado-cliente","Ingresando venta ", JOptionPane.INFORMATION_MESSAGE);						os.write(1);
 					lista.insertar(elemento);
 					String []campos;
 					String []campos2;
-					FileInputStream is=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-					DataInputStream ds=new DataInputStream(is);
+					
+					
 					nodoVenta auxiliar=lista.ultimo.siguiente;
 					String cadena="";
 					do{
@@ -62,12 +65,13 @@ public class Ventana_201325557 extends JFrame{
 						os.write(("  Fecha: "+campos2[1]).getBytes());
 						os.write(("  Cantidad: "+campos2[2]).getBytes());
 						os.write(("  Empleado: "+campos2[3]).getBytes());
-						os.write(("  Cliente: "+campos2[4]).getBytes());
+						os.write(("  Cliente: "+campos2[4]+"\r\n").getBytes());
+						
 					}
 					
 					os.close();
 					ds.close();
-					is.close();
+					
 					
 				}
 				catch(IOException e2){
@@ -83,12 +87,24 @@ public class Ventana_201325557 extends JFrame{
 			public void actionPerformed(ActionEvent arg0) {
 				 try{
 			          File pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-			            if(pagina.exists()){
-			                Desktop.getDesktop().open(pagina);
-			                }
-			                else{
-			                    JOptionPane.showMessageDialog(null, "Archivo no creado");
-			                }
+			          String linea;
+			          String [] campos;
+			          FileInputStream is=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.fct");
+			          DataInputStream ds=new DataInputStream(is);
+			          FileOutputStream is2=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+			          DataOutputStream os=new DataOutputStream(is2);
+			          while((linea=ds.readLine())!=null){
+			        	  campos=linea.split("\r\n");
+			        	  for(int j=0;j<campos.length;j++){
+			        	  os.write((campos[j]).getBytes());
+			        	  os.write(("<br>").getBytes());
+			        	
+			        	  }
+			          }
+			          is.close();
+			          ds.close();
+			          Desktop.getDesktop().open(pagina);
+			              
 			           
 			        }catch(IOException e){
 			            e.printStackTrace();
