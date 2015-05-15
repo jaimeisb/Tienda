@@ -6,15 +6,19 @@ import javax.swing.JOptionPane;
 
 public class Venta_201325557 {
 File venta;
+
 {
+	
 venta=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.fct");
+
+
 
 }
 int[] arreglo={};
 
 									//logica de la lista para ventas
 
-	nodoVenta ultimo;
+	nodoVenta_201325557 ultimo;
 
 	Venta_201325557(){
 		ultimo=null;
@@ -25,7 +29,7 @@ int[] arreglo={};
 	}
 	//metodo para insertar nodos
 	public Venta_201325557 insertar(String elemento){
-		nodoVenta nuevo=new nodoVenta(elemento);
+		nodoVenta_201325557 nuevo=new nodoVenta_201325557(elemento);
 		if(ultimo!=null){
 			nuevo.siguiente=ultimo.siguiente;
 			ultimo.siguiente=nuevo;
@@ -35,7 +39,7 @@ int[] arreglo={};
 	}
 	//metodo para eliminar nodo de  la lista!
 	boolean eliminar(String elemento){
-		nodoVenta actual;
+		nodoVenta_201325557 actual;
 		boolean encontrar=false;
 		actual=ultimo;
 		while(actual.siguiente!=ultimo && !encontrar){
@@ -46,7 +50,7 @@ int[] arreglo={};
 		}
 		encontrar=(actual.siguiente.dato==elemento);
 		if(encontrar){
-			nodoVenta auxiliar=actual.siguiente;
+			nodoVenta_201325557 auxiliar=actual.siguiente;
 			if(ultimo==ultimo.siguiente){
 				ultimo=null;
 			}
@@ -63,7 +67,7 @@ int[] arreglo={};
 	
 	//metodo para mostrar la lista
 	public void mostrarLista(){
-		nodoVenta auxiliar=ultimo.siguiente;
+		nodoVenta_201325557 auxiliar=ultimo.siguiente;
 		String cadena="";
 		do{
 			cadena=cadena+"["+auxiliar.dato+"]->";
