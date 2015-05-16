@@ -1,6 +1,9 @@
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Desktop;
 import java.awt.event.ActionListener;
@@ -16,10 +19,11 @@ import java.io.IOException;
 
 public class Ventana_201325557 extends JFrame{
 
-	
+	String empleados = null, cliente= null,venta= null,producto= null,rutacliente=null,rutaventa=null,ruta=null,rutaempleado=null,rutaproducto=null;
 	public Ventana_201325557() {
 		
-		
+		//"emp","fct","clt","prt"
+		FileNameExtensionFilter filtro=new FileNameExtensionFilter("Carga de archivos","txt");
 		Venta_201325557 listaVenta=new Venta_201325557();
 		listaEmpleado_201325557 listaEmpleado=new listaEmpleado_201325557();
 		listaProducto_201325557 listaProducto=new listaProducto_201325557();
@@ -81,56 +85,109 @@ public class Ventana_201325557 extends JFrame{
 		ReporteDeVentas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				 try{
-			          File pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-			          FileInputStream isv=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.txt");
-			          DataInputStream dsv=new DataInputStream(isv);
-			          FileOutputStream is2v=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-			          DataOutputStream os=new DataOutputStream(is2v);
-			          String lineaV,lineaE,lineaP;
-			          String[] camposV,camposE,camposP;
-			          int total=0;
-			          os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
-			          os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Reporte de ventas</TH>").getBytes());
-			          os.write(("<TR>").getBytes());   
-			          os.write(("<TD>Cod. Empleado</TD><TD>Empleado</TD><TD>Fecha</TD><TD>Cod. Producto</TD><TD>Producto</TD><TD>Cantidad</TD><TD>Precio</TD><TD>Sub.Total</TD>").getBytes());
-			          os.write(("</TR>").getBytes());
-			         while((lineaV=dsv.readLine())!=null){
-			        	 camposV=lineaV.split("-");
-			        	 os.write(("<TR>").getBytes()); 
-			        	 os.write(("<TD>"+camposV[3]+"</TD>").getBytes());//1
-			        	 FileInputStream ise=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\EMPLEADO.txt");
-				          DataInputStream dse=new DataInputStream(ise);
-			        		  while((lineaE=dse.readLine())!=null){
-			        			  camposE=lineaE.split("-");
-			        			  if(camposV[3].equals(camposE[0])){
-			        				  os.write(("<TD>"+camposE[1]+" "+camposE[2]+"</TD>").getBytes());//2
-			        				  break;
-			        			  }
-			        		  }
-			        		  os.write(("<TD>"+camposV[1]+"</TD>").getBytes());//3
-			        		  os.write(("<TD>"+camposV[0]+"</TD>").getBytes());//4
-			        		  FileInputStream isp=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\PRODUCTO.txt");
-					          DataInputStream dsp=new DataInputStream(isp);
-			        		  while((lineaP=dsp.readLine())!=null){
-			        			  camposP=lineaP.split("-");
-			        			  if(camposV[0].equals(camposP[0])){
-			        				  os.write(("<TD>"+camposP[1]+"</TD>").getBytes());//5
-			        				  os.write(("<TD>"+camposV[2]+"</TD>").getBytes());//6
-					        		  os.write(("<TD>"+camposP[2]+"</TD>").getBytes());//7
-					        		  os.write(("<TD>"+(Integer.parseInt(camposP[2])*Integer.parseInt(camposV[2]))+"</TD>").getBytes());//8
-					        		  total=total+(Integer.parseInt(camposP[2])*Integer.parseInt(camposV[2]));
-					        		  break;
-			        			  }
-			        		  }
-			        		  os.write(("</TR>").getBytes());			        		   
+			          if(venta!= null && producto!=null && empleados!=null){
+			        	  File pagina=new File(ruta+"\\Pagina.HTML");
+				          FileInputStream isv=new FileInputStream(rutaventa);
+				          DataInputStream dsv=new DataInputStream(isv);
+				          FileOutputStream is2v=new FileOutputStream(ruta+"\\Pagina.HTML");
+				          DataOutputStream os=new DataOutputStream(is2v);
+				          String lineaV,lineaE,lineaP;
+				          String[] camposV,camposE,camposP;
+				          int total=0;
+				          os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
+				          os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Reporte de ventas</TH>").getBytes());
+				          os.write(("<TR>").getBytes());   
+				          os.write(("<TD>Cod. Empleado</TD><TD>Empleado</TD><TD>Fecha</TD><TD>Cod. Producto</TD><TD>Producto</TD><TD>Cantidad</TD><TD>Precio</TD><TD>Sub.Total</TD>").getBytes());
+				          os.write(("</TR>").getBytes());
+				         while((lineaV=dsv.readLine())!=null){
+				        	 camposV=lineaV.split("-");
+				        	 os.write(("<TR>").getBytes()); 
+				        	 os.write(("<TD>"+camposV[3]+"</TD>").getBytes());//1
+				        	 FileInputStream ise=new FileInputStream(rutaempleado);
+					          DataInputStream dse=new DataInputStream(ise);
+				        		  while((lineaE=dse.readLine())!=null){
+				        			  camposE=lineaE.split("-");
+				        			  if(camposV[3].equals(camposE[0])){
+				        				  os.write(("<TD>"+camposE[1]+" "+camposE[2]+"</TD>").getBytes());//2
+				        				  break;
+				        			  }
+				        		  }
+				        		  os.write(("<TD>"+camposV[1]+"</TD>").getBytes());//3
+				        		  os.write(("<TD>"+camposV[0]+"</TD>").getBytes());//4
+				        		  FileInputStream isp=new FileInputStream(rutaproducto);
+						          DataInputStream dsp=new DataInputStream(isp);
+				        		  while((lineaP=dsp.readLine())!=null){
+				        			  camposP=lineaP.split("-");
+				        			  if(camposV[0].equals(camposP[0])){
+				        				  os.write(("<TD>"+camposP[1]+"</TD>").getBytes());//5
+				        				  os.write(("<TD>"+camposV[2]+"</TD>").getBytes());//6
+						        		  os.write(("<TD>"+camposP[2]+"</TD>").getBytes());//7
+						        		  os.write(("<TD>"+(Integer.parseInt(camposP[2])*Integer.parseInt(camposV[2]))+"</TD>").getBytes());//8
+						        		  total=total+(Integer.parseInt(camposP[2])*Integer.parseInt(camposV[2]));
+						        		  break;
+				        			  }
+				        		  }
+				        		  os.write(("</TR>").getBytes());			        		   
+				          }
+				         os.write(("<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>"+"TOTAL: "+total+"</TD>").getBytes());//3
+				         os.write(("</table>").getBytes());
+				         os.close();
+				         is2v.close();
+				         isv.close();
+				         dsv.close();
+				         Desktop.getDesktop().open(pagina);
+			          }else {
+			        	  File pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+				          FileInputStream isv=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.txt");
+				          DataInputStream dsv=new DataInputStream(isv);
+				          FileOutputStream is2v=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+				          DataOutputStream os=new DataOutputStream(is2v);
+				          String lineaV,lineaE,lineaP;
+				          String[] camposV,camposE,camposP;
+				          int total=0;
+				          os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
+				          os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Reporte de ventas</TH>").getBytes());
+				          os.write(("<TR>").getBytes());   
+				          os.write(("<TD>Cod. Empleado</TD><TD>Empleado</TD><TD>Fecha</TD><TD>Cod. Producto</TD><TD>Producto</TD><TD>Cantidad</TD><TD>Precio</TD><TD>Sub.Total</TD>").getBytes());
+				          os.write(("</TR>").getBytes());
+				         while((lineaV=dsv.readLine())!=null){
+				        	 camposV=lineaV.split("-");
+				        	 os.write(("<TR>").getBytes()); 
+				        	 os.write(("<TD>"+camposV[3]+"</TD>").getBytes());//1
+				        	 FileInputStream ise=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\EMPLEADO.txt");
+					          DataInputStream dse=new DataInputStream(ise);
+				        		  while((lineaE=dse.readLine())!=null){
+				        			  camposE=lineaE.split("-");
+				        			  if(camposV[3].equals(camposE[0])){
+				        				  os.write(("<TD>"+camposE[1]+" "+camposE[2]+"</TD>").getBytes());//2
+				        				  break;
+				        			  }
+				        		  }
+				        		  os.write(("<TD>"+camposV[1]+"</TD>").getBytes());//3
+				        		  os.write(("<TD>"+camposV[0]+"</TD>").getBytes());//4
+				        		  FileInputStream isp=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\PRODUCTO.txt");
+						          DataInputStream dsp=new DataInputStream(isp);
+				        		  while((lineaP=dsp.readLine())!=null){
+				        			  camposP=lineaP.split("-");
+				        			  if(camposV[0].equals(camposP[0])){
+				        				  os.write(("<TD>"+camposP[1]+"</TD>").getBytes());//5
+				        				  os.write(("<TD>"+camposV[2]+"</TD>").getBytes());//6
+						        		  os.write(("<TD>"+camposP[2]+"</TD>").getBytes());//7
+						        		  os.write(("<TD>"+(Integer.parseInt(camposP[2])*Integer.parseInt(camposV[2]))+"</TD>").getBytes());//8
+						        		  total=total+(Integer.parseInt(camposP[2])*Integer.parseInt(camposV[2]));
+						        		  break;
+				        			  }
+				        		  }
+				        		  os.write(("</TR>").getBytes());			        		   
+				          }
+				         os.write(("<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>"+"TOTAL: "+total+"</TD>").getBytes());//3
+				         os.write(("</table>").getBytes());
+				         os.close();
+				         is2v.close();
+				         isv.close();
+				         dsv.close();
+				         Desktop.getDesktop().open(pagina);
 			          }
-			         os.write(("<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>"+"TOTAL: "+total+"</TD>").getBytes());//3
-			         os.write(("</table>").getBytes());
-			         os.close();
-			         is2v.close();
-			         isv.close();
-			         dsv.close();
-			         Desktop.getDesktop().open(pagina);
 			        }
 				 catch(IOException e){
 			           System.out.println(e);
@@ -144,44 +201,85 @@ public class Ventana_201325557 extends JFrame{
 		NumeroDeVentas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
-					 File pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-					  FileInputStream ise=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\EMPLEADO.txt");
-			          DataInputStream dse=new DataInputStream(ise);
-			          FileOutputStream is2v=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-			          DataOutputStream os=new DataOutputStream(is2v);
-			          String lineaE,lineaV;
-			          String [] camposE,camposV;
-			          int ventasEmpleado=0;
-			          os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
-			          os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de ventas por empleado</TH>").getBytes());
-			          os.write(("<TR>").getBytes());
-			          os.write(("<TD>Cod. Empleado</TD><TD>Empleado</TD><TD>Ventas</TD>").getBytes());
-			          os.write(("</TR>").getBytes());
-			        
-			          while((lineaE=dse.readLine())!=null){
-			        	  FileInputStream isV=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.txt");
-				          DataInputStream dsV=new DataInputStream(isV);
-			        	  camposE=lineaE.split("-");
-			        	  os.write(("<TR>").getBytes());
-			        	  ventasEmpleado=0;
-			        	  while((lineaV=dsV.readLine())!=null){
-					        	 camposV=lineaV.split("-");
-					        	 if( camposE[0].equals(camposV[3])){
-					        		 ventasEmpleado=ventasEmpleado+1;
-					        	 }
-			        	  }
-			        	  os.write(("<TR>").getBytes());
-		        		  os.write(("<TD>"+camposE[0]+"</TD>").getBytes());//1
-		        		  os.write(("<TD>"+camposE[1]+"</TD>").getBytes());//2
-		        		  os.write(("<TD>"+ventasEmpleado+"</TD>").getBytes());//4
-		        		  os.write(("</TR>").getBytes());
-		        		 }
-			          os.write(("</table>").getBytes());
-			          Desktop.getDesktop().open(pagina);
-			          is2v.close();
-			          os.close();
-			          dse.close();
-			          ise.close();
+					if(empleados!=null &&venta!=null){
+						 File pagina=new File(ruta+"\\Pagina.HTML");
+						  FileInputStream ise=new FileInputStream(rutaempleado);
+				          DataInputStream dse=new DataInputStream(ise);
+				          FileOutputStream is2v=new FileOutputStream(ruta+"\\Pagina.HTML");
+				          DataOutputStream os=new DataOutputStream(is2v);
+				          String lineaE,lineaV;
+				          String [] camposE,camposV;
+				          int ventasEmpleado=0;
+				          os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
+				          os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de ventas por empleado</TH>").getBytes());
+				          os.write(("<TR>").getBytes());
+				          os.write(("<TD>Cod. Empleado</TD><TD>Empleado</TD><TD>Ventas</TD>").getBytes());
+				          os.write(("</TR>").getBytes());
+				        
+				          while((lineaE=dse.readLine())!=null){
+				        	  FileInputStream isV=new FileInputStream(rutaventa);
+					          DataInputStream dsV=new DataInputStream(isV);
+				        	  camposE=lineaE.split("-");
+				        	  os.write(("<TR>").getBytes());
+				        	  ventasEmpleado=0;
+				        	  while((lineaV=dsV.readLine())!=null){
+						        	 camposV=lineaV.split("-");
+						        	 if( camposE[0].equals(camposV[3])){
+						        		 ventasEmpleado=ventasEmpleado+1;
+						        	 }
+				        	  }
+				        	  os.write(("<TR>").getBytes());
+			        		  os.write(("<TD>"+camposE[0]+"</TD>").getBytes());//1
+			        		  os.write(("<TD>"+camposE[1]+"</TD>").getBytes());//2
+			        		  os.write(("<TD>"+ventasEmpleado+"</TD>").getBytes());//4
+			        		  os.write(("</TR>").getBytes());
+			        		 }
+				          os.write(("</table>").getBytes());
+				          Desktop.getDesktop().open(pagina);
+				          is2v.close();
+				          os.close();
+				          dse.close();
+				          ise.close();
+					}else{
+						 File pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+						  FileInputStream ise=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\EMPLEADO.txt");
+				          DataInputStream dse=new DataInputStream(ise);
+				          FileOutputStream is2v=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+				          DataOutputStream os=new DataOutputStream(is2v);
+				          String lineaE,lineaV;
+				          String [] camposE,camposV;
+				          int ventasEmpleado=0;
+				          os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
+				          os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de ventas por empleado</TH>").getBytes());
+				          os.write(("<TR>").getBytes());
+				          os.write(("<TD>Cod. Empleado</TD><TD>Empleado</TD><TD>Ventas</TD>").getBytes());
+				          os.write(("</TR>").getBytes());
+				        
+				          while((lineaE=dse.readLine())!=null){
+				        	  FileInputStream isV=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.txt");
+					          DataInputStream dsV=new DataInputStream(isV);
+				        	  camposE=lineaE.split("-");
+				        	  os.write(("<TR>").getBytes());
+				        	  ventasEmpleado=0;
+				        	  while((lineaV=dsV.readLine())!=null){
+						        	 camposV=lineaV.split("-");
+						        	 if( camposE[0].equals(camposV[3])){
+						        		 ventasEmpleado=ventasEmpleado+1;
+						        	 }
+				        	  }
+				        	  os.write(("<TR>").getBytes());
+			        		  os.write(("<TD>"+camposE[0]+"</TD>").getBytes());//1
+			        		  os.write(("<TD>"+camposE[1]+"</TD>").getBytes());//2
+			        		  os.write(("<TD>"+ventasEmpleado+"</TD>").getBytes());//4
+			        		  os.write(("</TR>").getBytes());
+			        		 }
+				          os.write(("</table>").getBytes());
+				          Desktop.getDesktop().open(pagina);
+				          is2v.close();
+				          os.close();
+				          dse.close();
+				          ise.close();
+					}
 					}
 				catch(IOException e){
 				}
@@ -199,54 +297,104 @@ public class Ventana_201325557 extends JFrame{
 				int total = 0;
 				rangos=(JOptionPane.showInputDialog(null,"ingresa el rango de fechas a buscar de la forma: dd.mm.aa-dd.mm.aa","Intervalos de fechas", JOptionPane.INFORMATION_MESSAGE));
 				fechas=rangos.split("-");
-				try{
+				try{ if(venta!=null && producto!=null){
+					File pagina=new File(ruta+"\\Pagina.HTML");
+					 FileInputStream isV=new FileInputStream(rutaventa);
+			         DataInputStream dsV=new DataInputStream(isV);
+			         FileOutputStream is2v=new FileOutputStream(ruta +"\\Pagina.HTML");
+				     DataOutputStream os=new DataOutputStream(is2v);
+			         String lineaV,producto,lineap;
+			         String[] camposV,fechaI,fechaf,fechav,camposp;
+			         fechaI=fechas[0].split("/");
+			         fechaf=fechas[1].split("/");
+			         os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
+				     os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de compras por cliente</TH>").getBytes());
+				     os.write(("<TR>").getBytes());
+				     os.write(("<TD>Fecha</TD><TD>Producto</TD><TD>Cantidad</TD><TD>Precio</TD><TD>Sub-total</TD>").getBytes());
+				     os.write(("</TR>").getBytes());
+				     os.write(("<TR>").getBytes());
+				    // System.out.println(fechaI[0]);
+			         while((lineaV=dsV.readLine())!=null){
+			        	 camposV=lineaV.split("-");
+			        	 fechav=camposV[1].split("/");
+			        	 if(Integer.parseInt(fechaI[0])<=Integer.parseInt(fechav[0])&& Integer.parseInt(fechaI[1])<=Integer.parseInt(fechav[1])&&Integer.parseInt(fechaI[2])<=Integer.parseInt(fechav[2])
+			        			&& Integer.parseInt(fechav[0])<=Integer.parseInt(fechaf[0])&&Integer.parseInt(fechav[1])<=Integer.parseInt(fechaf[1])&&Integer.parseInt(fechav[2])<=Integer.parseInt(fechaf[2]) ){
+			        		  os.write(("<TD>"+camposV[1]+"</TD>").getBytes());//1
+			        		  producto=camposV[0];
+			        		  FileInputStream isp=new FileInputStream(rutaproducto);
+			        		  DataInputStream dsp=new DataInputStream(isp);
+			        		  while((lineap=dsp.readLine())!=null){
+			        			  camposp=lineap.split("-");
+			        			  if(producto.equals(camposp[0])){
+			        				  producto=camposp[1]; 
+			        				  os.write(("<TD>"+producto+"</TD>").getBytes());//2
+					        		  os.write(("<TD>"+camposV[2]+"</TD>").getBytes());//3
+					        		  os.write(("<TD>"+camposp[2]+"</TD>").getBytes());//4
+					        		  os.write(("<TD>"+(Integer.parseInt(camposp[2])*Integer.parseInt(camposV[2]))+"</TD>").getBytes());//5
+					        		  total=total+(Integer.parseInt(camposp[2])*Integer.parseInt(camposV[2]));
+					        		  break;
+			        			  }	 
+			        		  }
+			        		  os.write(("</TR>").getBytes());
+			        	 }
+			         }
+			         os.write(("<TD></TD><TD></TD><TD></TD><TD></TD><TD>"+"TOTAL: "+total+"</TD>").getBytes());//3
+			         os.write(("</table>").getBytes());
+			         isV.close();
+			         dsV.close();
+			         os.close();
+			         is2v.close();
+			          Desktop.getDesktop().open(pagina);
+				}else{
 					File pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-				 FileInputStream isV=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.txt");
-		         DataInputStream dsV=new DataInputStream(isV);
-		         FileOutputStream is2v=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-			     DataOutputStream os=new DataOutputStream(is2v);
-		         String lineaV,producto,lineap;
-		         String[] camposV,fechaI,fechaf,fechav,camposp;
-		         fechaI=fechas[0].split("/");
-		         fechaf=fechas[1].split("/");
-		         os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
-			     os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de compras por cliente</TH>").getBytes());
-			     os.write(("<TR>").getBytes());
-			     os.write(("<TD>Fecha</TD><TD>Producto</TD><TD>Cantidad</TD><TD>Precio</TD><TD>Sub-total</TD>").getBytes());
-			     os.write(("</TR>").getBytes());
-			     os.write(("<TR>").getBytes());
-			     System.out.println(fechaI[0]);
-		         while((lineaV=dsV.readLine())!=null){
-		        	 camposV=lineaV.split("-");
-		        	 fechav=camposV[1].split("/");
-		        	 if(Integer.parseInt(fechaI[0])<=Integer.parseInt(fechav[0])&& Integer.parseInt(fechaI[1])<=Integer.parseInt(fechav[1])&&Integer.parseInt(fechaI[2])<=Integer.parseInt(fechav[2])
-		        			&& Integer.parseInt(fechav[0])<=Integer.parseInt(fechaf[0])&&Integer.parseInt(fechav[1])<=Integer.parseInt(fechaf[1])&&Integer.parseInt(fechav[2])<=Integer.parseInt(fechaf[2]) ){
-		        		  os.write(("<TD>"+camposV[1]+"</TD>").getBytes());//1
-		        		  producto=camposV[0];
-		        		  FileInputStream isp=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\PRODUCTO.txt");
-		        		  DataInputStream dsp=new DataInputStream(isp);
-		        		  while((lineap=dsp.readLine())!=null){
-		        			  camposp=lineap.split("-");
-		        			  if(producto.equals(camposp[0])){
-		        				  producto=camposp[1]; 
-		        				  os.write(("<TD>"+producto+"</TD>").getBytes());//2
-				        		  os.write(("<TD>"+camposV[2]+"</TD>").getBytes());//3
-				        		  os.write(("<TD>"+camposp[2]+"</TD>").getBytes());//4
-				        		  os.write(("<TD>"+(Integer.parseInt(camposp[2])*Integer.parseInt(camposV[2]))+"</TD>").getBytes());//5
-				        		  total=total+(Integer.parseInt(camposp[2])*Integer.parseInt(camposV[2]));
-				        		  break;
-		        			  }	 
-		        		  }
-		        		  os.write(("</TR>").getBytes());
-		        	 }
-		         }
-		         os.write(("<TD></TD><TD></TD><TD></TD><TD></TD><TD>"+"TOTAL: "+total+"</TD>").getBytes());//3
-		         os.write(("</table>").getBytes());
-		         isV.close();
-		         dsV.close();
-		         os.close();
-		         is2v.close();
-		          Desktop.getDesktop().open(pagina);
+					 FileInputStream isV=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.txt");
+			         DataInputStream dsV=new DataInputStream(isV);
+			         FileOutputStream is2v=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+				     DataOutputStream os=new DataOutputStream(is2v);
+			         String lineaV,producto,lineap;
+			         String[] camposV,fechaI,fechaf,fechav,camposp;
+			         fechaI=fechas[0].split("/");
+			         fechaf=fechas[1].split("/");
+			         os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
+				     os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de compras por cliente</TH>").getBytes());
+				     os.write(("<TR>").getBytes());
+				     os.write(("<TD>Fecha</TD><TD>Producto</TD><TD>Cantidad</TD><TD>Precio</TD><TD>Sub-total</TD>").getBytes());
+				     os.write(("</TR>").getBytes());
+				     os.write(("<TR>").getBytes());
+				   //  System.out.println(fechaI[0]);
+			         while((lineaV=dsV.readLine())!=null){
+			        	 camposV=lineaV.split("-");
+			        	 fechav=camposV[1].split("/");
+			        	 if(Integer.parseInt(fechaI[0])<=Integer.parseInt(fechav[0])&& Integer.parseInt(fechaI[1])<=Integer.parseInt(fechav[1])&&Integer.parseInt(fechaI[2])<=Integer.parseInt(fechav[2])
+			        			&& Integer.parseInt(fechav[0])<=Integer.parseInt(fechaf[0])&&Integer.parseInt(fechav[1])<=Integer.parseInt(fechaf[1])&&Integer.parseInt(fechav[2])<=Integer.parseInt(fechaf[2]) ){
+			        		  os.write(("<TD>"+camposV[1]+"</TD>").getBytes());//1
+			        		  producto=camposV[0];
+			        		  FileInputStream isp=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\PRODUCTO.txt");
+			        		  DataInputStream dsp=new DataInputStream(isp);
+			        		  while((lineap=dsp.readLine())!=null){
+			        			  camposp=lineap.split("-");
+			        			  if(producto.equals(camposp[0])){
+			        				  producto=camposp[1]; 
+			        				  os.write(("<TD>"+producto+"</TD>").getBytes());//2
+					        		  os.write(("<TD>"+camposV[2]+"</TD>").getBytes());//3
+					        		  os.write(("<TD>"+camposp[2]+"</TD>").getBytes());//4
+					        		  os.write(("<TD>"+(Integer.parseInt(camposp[2])*Integer.parseInt(camposV[2]))+"</TD>").getBytes());//5
+					        		  total=total+(Integer.parseInt(camposp[2])*Integer.parseInt(camposV[2]));
+					        		  break;
+			        			  }	 
+			        		  }
+			        		  os.write(("</TR>").getBytes());
+			        	 }
+			         }
+			         os.write(("<TD></TD><TD></TD><TD></TD><TD></TD><TD>"+"TOTAL: "+total+"</TD>").getBytes());//3
+			         os.write(("</table>").getBytes());
+			         isV.close();
+			         dsV.close();
+			         os.close();
+			         is2v.close();
+			          Desktop.getDesktop().open(pagina);
+				}
+					
 				}
 				catch(IOException e){					
 				}
@@ -259,44 +407,90 @@ public class Ventana_201325557 extends JFrame{
 		ComprasRealizadasPor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
+				
 				try{
-					File pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-					FileInputStream isc=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\CLIENTE.txt");
-					DataInputStream dsc=new DataInputStream(isc);
-					FileOutputStream is2v=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
-			        DataOutputStream os=new DataOutputStream(is2v);
-			        String lineaC,lineaV;
-			        String [] camposC,camposV;
-			        int comprasCliente;
-			        os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
-			        os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de compras por cliente</TH>").getBytes());
-			        os.write(("<TR>").getBytes());
-			        os.write(("<TD>Cod. Cliente</TD><TD>Cliente</TD><TD>Compras</TD>").getBytes());
-			        os.write(("</TR>").getBytes());
-			        while((lineaC=dsc.readLine())!=null){
-			        	camposC=lineaC.split("-");
-			        	 FileInputStream isV=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.txt");
-				         DataInputStream dsV=new DataInputStream(isV);
-				         os.write(("<TR>").getBytes());
-			        	comprasCliente=0;
-			        	while((lineaV=dsV.readLine())!=null){
-				        	 camposV=lineaV.split("-");
-				        	 if( camposC[0].equals(camposV[4])){
-				        		 comprasCliente=comprasCliente+1;
-				        	 }
-			        	}
-			        	 os.write(("<TR>").getBytes());
-		        		  os.write(("<TD>"+camposC[0]+"</TD>").getBytes());//1
-		        		  os.write(("<TD>"+camposC[1]+"</TD>").getBytes());//2
-		        		  os.write(("<TD>"+comprasCliente+"</TD>").getBytes());//4
-		        		  os.write(("</TR>").getBytes());
-			        }
-			        os.write(("</table>").getBytes());
-			          Desktop.getDesktop().open(pagina);
-			          is2v.close();
-			          os.close();
-			          dsc.close();
-			          isc.close();
+					if(cliente!=null && venta!=null){
+					
+						File pagina=new File(ruta+"\\Pagina.HTML");
+						FileInputStream isc=new FileInputStream(rutacliente);
+						DataInputStream dsc=new DataInputStream(isc);
+					
+						FileOutputStream is2v=new FileOutputStream(ruta+"\\Pagina.HTML");
+				
+				        DataOutputStream os=new DataOutputStream(is2v);
+				        String lineaC,lineaV;
+				        String [] camposC,camposV;
+				        int comprasCliente;
+				        os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
+				        os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de compras por cliente</TH>").getBytes());
+				        os.write(("<TR>").getBytes());
+				        os.write(("<TD>Cod. Cliente</TD><TD>Cliente</TD><TD>Compras</TD>").getBytes());
+				        os.write(("</TR>").getBytes());
+				        while((lineaC=dsc.readLine())!=null){
+				        	camposC=lineaC.split("-");
+				        	 FileInputStream isV=new FileInputStream(rutaventa);
+					         DataInputStream dsV=new DataInputStream(isV);
+					         os.write(("<TR>").getBytes());
+				        	comprasCliente=0;
+				        	while((lineaV=dsV.readLine())!=null){
+					        	 camposV=lineaV.split("-");
+					        	 if( camposC[0].equals(camposV[4])){
+					        		 comprasCliente=comprasCliente+1;
+					        	 }
+				        	}
+				        	 os.write(("<TR>").getBytes());
+			        		  os.write(("<TD>"+camposC[0]+"</TD>").getBytes());//1
+			        		  os.write(("<TD>"+camposC[1]+"</TD>").getBytes());//2
+			        		  os.write(("<TD>"+comprasCliente+"</TD>").getBytes());//4
+			        		  os.write(("</TR>").getBytes());
+				        }
+				        os.write(("</table>").getBytes());
+				          Desktop.getDesktop().open(pagina);
+				          is2v.close();
+				          os.close();
+				          dsc.close();
+				          isc.close();
+					}
+					else{
+						File pagina=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+						FileInputStream isc=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\CLIENTE.txt");
+						DataInputStream dsc=new DataInputStream(isc);
+						FileOutputStream is2v=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\Pagina.HTML");
+				        DataOutputStream os=new DataOutputStream(is2v);
+				        String lineaC,lineaV;
+				        String [] camposC,camposV;
+				        int comprasCliente;
+				        os.write(("<table BORDER=\"3\"ALIGN=\"center\">").getBytes());
+				        os.write(("<TH COLSPAN=8 BGCOLOR=\"#6D8FFF\"> Numero de compras por cliente</TH>").getBytes());
+				        os.write(("<TR>").getBytes());
+				        os.write(("<TD>Cod. Cliente</TD><TD>Cliente</TD><TD>Compras</TD>").getBytes());
+				        os.write(("</TR>").getBytes());
+				        while((lineaC=dsc.readLine())!=null){
+				        	camposC=lineaC.split("-");
+				        	 FileInputStream isV=new FileInputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\VENTA.txt");
+					         DataInputStream dsV=new DataInputStream(isV);
+					         os.write(("<TR>").getBytes());
+				        	comprasCliente=0;
+				        	while((lineaV=dsV.readLine())!=null){
+					        	 camposV=lineaV.split("-");
+					        	 if( camposC[0].equals(camposV[4])){
+					        		 comprasCliente=comprasCliente+1;
+					        	 }
+				        	}
+				        	 os.write(("<TR>").getBytes());
+			        		  os.write(("<TD>"+camposC[0]+"</TD>").getBytes());//1
+			        		  os.write(("<TD>"+camposC[1]+"</TD>").getBytes());//2
+			        		  os.write(("<TD>"+comprasCliente+"</TD>").getBytes());//4
+			        		  os.write(("</TR>").getBytes());
+				        }
+				        os.write(("</table>").getBytes());
+				          Desktop.getDesktop().open(pagina);
+				          is2v.close();
+				          os.close();
+				          dsc.close();
+				          isc.close();
+					}
+					
 				}
 				catch(IOException e){
 					
@@ -307,9 +501,54 @@ public class Ventana_201325557 extends JFrame{
 		ComprasRealizadasPor.setBounds(216, 225, 227, 28);
 		getContentPane().add(ComprasRealizadasPor);
 		
-		JButton VerTodosLos = new JButton("Ver todos los reportes");
-		VerTodosLos.setBounds(257, 275, 161, 23);
-		getContentPane().add(VerTodosLos);
+		JButton cargaArchivos = new JButton("Cargar Archivos");
+		cargaArchivos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			
+				
+				
+				JFileChooser selector=new JFileChooser();
+				selector.setFileFilter(filtro);
+				selector.setMultiSelectionEnabled(true);
+				int r=selector.showOpenDialog(null);
+				if(r==JFileChooser.APPROVE_OPTION){
+					File archivos[]=selector.getSelectedFiles();
+					
+					
+					for(int i=0;i<archivos.length;i++){
+						
+						if(archivos[i].getName().equals("EMPLEADO.txt")){
+							empleados=archivos[i].getParent()+archivos[i].getName();
+							ruta=archivos[i].getParent();	
+							rutaempleado=archivos[i].getAbsolutePath();
+						}
+						else if(archivos[i].getName().equals("PRODUCTO.txt")){
+							producto=archivos[i].getParent()+archivos[i].getName();
+							ruta=archivos[i].getParent();
+							rutaproducto=archivos[i].getAbsolutePath();
+						}
+						else if(archivos[i].getName().equals("VENTA.txt")){
+							venta=archivos[i].getParent()+archivos[i].getName();
+							rutaventa=archivos[i].getAbsolutePath();
+							ruta=archivos[i].getParent();	
+						}
+						else if(archivos[i].getName().equals("CLIENTE.txt")){
+							cliente=archivos[i].getParent()+archivos[i].getName();
+							rutacliente=archivos[i].getAbsolutePath();
+							
+							ruta=archivos[i].getParent();	
+						}
+						
+					}
+					
+				}
+		  
+		
+				
+			}
+		});
+		cargaArchivos.setBounds(257, 275, 161, 23);
+		getContentPane().add(cargaArchivos);
 		
 		JButton AgregarCliente = new JButton("Agregar cliente");
 		AgregarCliente.addActionListener(new ActionListener() {
@@ -399,9 +638,16 @@ public class Ventana_201325557 extends JFrame{
 				String elemento;
 				try{
 					File empleadoDoc;
+					FileOutputStream os;
 					{
 					empleadoDoc=new File("C:\\Users\\Jaime\\Desktop\\Proyecto\\EMPLEADO.txt");}
-					FileOutputStream os=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\EMPLEADO.txt");
+					if(empleadoDoc.exists()){
+						os=new FileOutputStream(empleadoDoc);
+					}
+					else{
+						 os=new FileOutputStream("C:\\Users\\Jaime\\Desktop\\Proyecto\\EMPLEADO.txt");
+					}
+					
 					DataOutputStream ds=new DataOutputStream(os);
 					elemento=JOptionPane.showInputDialog(null,"ingrese los datos del empleado de la forma:\n "
 							+ "Codigo-Nombre-Apellido-Edad-Cargo","Ingresando Epleado ", JOptionPane.INFORMATION_MESSAGE);	
